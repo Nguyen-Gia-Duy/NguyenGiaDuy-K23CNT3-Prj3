@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +56,12 @@ public class NgdBookController {
         // Xử lý ảnh
         if (!imageFile.isEmpty()) {
             try {
-                String uploadDir = "uploads/";
-                java.io.File folder = new java.io.File(uploadDir);
+                String uploadDir = "src/main/resources/static/uploads/";
+                File folder = new File(uploadDir);
                 if (!folder.exists()) folder.mkdirs();
                 String fileName = imageFile.getOriginalFilename();
-                imageFile.transferTo(new java.io.File(uploadDir + fileName));
-                ngdBook.setNgdImgUrl("/" + uploadDir + fileName);
+                imageFile.transferTo(new File(uploadDir + fileName));
+                ngdBook.setNgdImgUrl("/uploads/" + fileName); // URL hiển thị trong Thymeleaf
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -113,12 +114,12 @@ public class NgdBookController {
         // Cập nhật ảnh nếu có
         if (!imageFile.isEmpty()) {
             try {
-                String uploadDir = "uploads/";
-                java.io.File folder = new java.io.File(uploadDir);
+                String uploadDir = "src/main/resources/static/uploads/";
+                File folder = new File(uploadDir);
                 if (!folder.exists()) folder.mkdirs();
                 String fileName = imageFile.getOriginalFilename();
-                imageFile.transferTo(new java.io.File(uploadDir + fileName));
-                existingBook.setNgdImgUrl("/" + uploadDir + fileName);
+                imageFile.transferTo(new File(uploadDir + fileName));
+                existingBook.setNgdImgUrl("/uploads/" + fileName); // URL hiển thị trong Thymeleaf
             } catch (Exception e) {
                 e.printStackTrace();
             }

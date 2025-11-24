@@ -31,8 +31,8 @@ public class ngdBook {
     @ManyToMany
     @JoinTable(
             name = "ngd_book_author",
-            joinColumns = @JoinColumn(name = "ngdBookId"),
-            inverseJoinColumns = @JoinColumn(name = "ngdAuthorId")
+            joinColumns = @JoinColumn(name = "ngd_book_id"),
+            inverseJoinColumns = @JoinColumn(name = "ngd_author_id")
     )
     List<ngdAuthor> ngdAuthors = new ArrayList<>();
 }

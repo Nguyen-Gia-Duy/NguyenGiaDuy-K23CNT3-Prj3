@@ -12,7 +12,10 @@
 </head>
 <body style="background: #ccc">
 <section class="container">
-    <form th:action="@{/ngdbooks/new}" th:object="${ngdBook}" method="post" enctype="multipart/form-data">
+    <form th:action="${ngdBook.ngdId != null} ? @{/ngdbooks/edit/{id}(id=${ngdBook.ngdId})} : @{/ngdbooks/new}"
+          th:object="${ngdBook}"
+          method="post"
+          enctype="multipart/form-data">
         <input type="hidden" name="ngdId" th:if="${ngdBook.ngdId != null}" th:value="${ngdBook.ngdId}">
         <div class="card">
             <div class="card-header">
