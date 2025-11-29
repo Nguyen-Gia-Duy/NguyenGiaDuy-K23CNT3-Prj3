@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: #f5f7fb;
+            font-family: "Inter", sans-serif;
+        }
+
+        .page-container {
+            width: 100%;
+            padding: 25px 40px;
+        }
+
+        .card-custom {
+            border-radius: 18px;
+            padding: 25px;
+            background: #ffffff;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
+            border: none;
+        }
+
+        /* BUTTON */
+        .btn-add {
+            background: #0d6efd;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .table-wrapper {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #000;
+            margin-top: 20px;
+        }
+
+        /* FIX ĐỘ RỘNG CÁC CỘT */
+        th:nth-child(1), td:nth-child(1) { width: 10%; }  /* Ảnh */
+        th:nth-child(2), td:nth-child(2) { width: 25%; }  /* Tên */
+        th:nth-child(3), td:nth-child(3) { width: 12%; text-align: center; }  /* Giá */
+        th:nth-child(4), td:nth-child(4) { width: 10%; text-align: center; }  /* Số lượng */
+        th:nth-child(5), td:nth-child(5) { width: 18%; }  /* Danh mục */
+        th:nth-child(6), td:nth-child(6) { width: 10%; text-align: center; }  /* Hành động */
+
+        /* TABLE */
+        .table thead th {
+            background: #ebeff7;
+            text-transform: uppercase;
+            color: #003566;
+            font-size: 14px;
+            font-weight: 700;
+            border-bottom: 2px solid #003566 !important;
+            text-align: center;
+        }
+
+        .table img {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #cfd3da;
+            background: white;
+        }
+
+        .action-btn:hover {
+            background: #eef4ff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <div class="card-custom">
+
+        <div class="d-flex justify-content-start mb-3">
+            <a th:href="@{/admin/products/add}" class="btn-add">
+                <i class="bi bi-plus-circle"></i> Thêm sản phẩm
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table table-bordered mb-0">
+                <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Danh mục</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td><img th:src="@{${product.imageUrl}}" alt=""></td>
+
+                    <td th:text="${product.name}"></td>
+
+                    <td th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + 'đ'"></td>
+
+                    <td th:text="${product.quantity}"></td>
+
+                    <td th:text="${product.category != null ? product.category.name : 'Không có'}"></td>
+
+                    <td>
+                        <a th:href="@{'/admin/products/edit/' + ${product.id}}"
+                           class="action-btn">
+                            <i class="bi bi-pencil text-primary"></i>
+                        </a>
+
+                        <a th:href="@{'/admin/products/delete/' + ${product.id}}"
+                           onclick="return confirm('Bạn có chắc muốn xóa?')"
+                           class="action-btn ms-2">
+                            <i class="bi bi-trash text-danger"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

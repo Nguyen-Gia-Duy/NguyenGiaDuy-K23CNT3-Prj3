@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: base(~{::body})">
+<body>
+<div th:fragment="content">
+
+    <h3 th:text="'Sản phẩm thuộc: ' + ${categoryName}"></h3>
+
+    <div class="row mt-3" th:each="toy : ${toys}">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm">
+                <img th:src="@{${toy.imageUrl}}" class="card-img-top" />
+                <div class="card-body">
+                    <h5 th:text="${toy.name}"></h5>
+                    <p th:text="'Giá: ' + ${toy.price} + ' VND'"></p>
+                    <a class="btn btn-primary w-100"
+                       th:href="@{/product/detail(id=${toy.id})}">
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

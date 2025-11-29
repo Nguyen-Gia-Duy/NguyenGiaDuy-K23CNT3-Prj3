@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: base(~{::body})">
+<body>
+<div th:fragment="content">
+
+    <h2>Bảng điều khiển Admin</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <a class="btn btn-secondary w-100 p-3" th:href="@{/admin/categories}">
+                📁 Quản lý danh mục
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a class="btn btn-secondary w-100 p-3" th:href="@{/admin/toys}">
+                🧸 Quản lý sản phẩm
+            </a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<div th:fragment="content">
+
+    <h2>Giỏ hàng</h2>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>Sản phẩm</th><th>Số lượng</th><th>Giá</th><th>Tổng</th><th>Xóa</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cart}">
+            <td th:text="${item.toy.name}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.toy.price}"></td>
+            <td th:text="${item.toy.price * item.quantity}"></td>
+            <td><a th:href="@{/cart/remove(id=${item.toy.id})}" class="btn btn-danger btn-sm">X</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 class="text-end" th:text="'Tổng tiền: ' + ${total} + ' VND'"></h3>
+
+    <div class="text-end">
+        <a class="btn btn-primary" th:href="@{/checkout}">Thanh toán</a>
+    </div>
+
+</div>
