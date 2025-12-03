@@ -6,7 +6,6 @@ import toyland.entity.Category;
 import toyland.repository.CategoryRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -14,22 +13,32 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
+    // =============================
+    // Lấy tất cả danh mục
+    // =============================
     public List<Category> findAll() {
-        // Gọi phương thức Repository đã thêm JOIN FETCH
         return categoryRepository.findAllWithProducts();
     }
 
-    public Optional<Category> findById(Long id) {
-        return categoryRepository.findById(id);
+    // =============================
+    // Lấy danh mục theo id
+    // Trả về Category trực tiếp hoặc null nếu không tồn tại
+    // =============================
+    public Category findById(Long id) {
+        return categoryRepository.findById(id).orElse(null);
     }
 
+    // =============================
+    // Lưu hoặc cập nhật danh mục
+    // =============================
     public Category save(Category category) {
         return categoryRepository.save(category);
     }
 
+    // =============================
+    // Xóa danh mục theo id
+    // =============================
     public void deleteById(Long id) {
-
         categoryRepository.deleteById(id);
     }
 }

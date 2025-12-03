@@ -1,52 +1,103 @@
 package toyland.service;
 
-
-import lombok.Data;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import toyland.entity.*;
-import toyland.repository.*;
-@Data
+import toyland.entity.Cart;
+import toyland.entity.CartItem;
+import toyland.entity.Product;
+import toyland.entity.User;
+import toyland.repository.CartItemRepository;
+import toyland.repository.CartRepository;
+import toyland.repository.ProductRepository;
+
+import java.util.List;
+
 @Service
 public class CartService {
 
-    @Autowired private UserRepository userRepository;
-    @Autowired private ProductRepository productRepository;
-    @Autowired private CartItemRepository cartItemRepo;
+    @Autowired
+    private CartRepository cartRepository;
 
-    public void addToCart(String username, Long productId, int quantity) {
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
-        User user = userRepository.findByUsername(username);
+    @Autowired
+    private ProductRepository productRepository;
 
-        // Nếu user chưa có cart => tạo mới
-        if (user.getCart() == null) {
-            Cart cart = new Cart();
+    public Cart getCartByUser(User user) {
+        Cart cart = cartRepository.findByUser(user);
+        if (cart == null) {
+            cart = new Cart();
             cart.setUser(user);
-            user.setCart(cart);
-            userRepository.save(user);
+            cartRepository.save(cart);
         }
-
-        Cart cart = user.getCart();
-
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null) return;
-
-        // Kiểm tra item đã tồn tại chưa
-        CartItem item = cart.getItems().stream()
-                .filter(i -> i.getProduct().getId().equals(productId))
-                .findFirst()
-                .orElse(null);
-
-        if (item != null) {
-            item.setQuantity(item.getQuantity() + quantity);
-        } else {
-            item = new CartItem();
-            item.setProduct(product);
-            item.setQuantity(quantity);
-            cart.addItem(item);
-        }
-
-        userRepository.save(user);
+        return cart;
     }
+
+    public List<CartItem> getItems(User user) {
+        return getCartByUser(user).getItems();
+    }
+
+    public void addProduct(User user, Long productId, Integer quantity) {
+        Cart cart = getCartByUser(user);
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
+
+        CartItem existingItem = null;
+        for (CartItem item : cart.getItems()) {
+            if (item.getProduct().getId().equals(productId)) {
+                existingItem = item;
+                break;
+            }
+        }
+
+        if (existingItem != null) {
+            existingItem.setQuantity(existingItem.getQuantity() + quantity);
+            cartItemRepository.save(existingItem);
+        } else {
+            CartItem item = new CartItem(cart, product, quantity);
+            cart.addItem(item);
+            cartItemRepository.save(item);
+        }
+        cartRepository.save(cart);
+    }
+
+    public void updateItem(Long cartItemId, Integer quantity) {
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Item không tồn tại"));
+        item.setQuantity(quantity);
+        cartItemRepository.save(item);
+    }
+
+    public void removeItem(Long cartItemId) {
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Item không tồn tại"));
+        Cart cart = item.getCart();
+        cart.removeItem(item);
+        cartItemRepository.delete(item);
+        cartRepository.save(cart);
+    }
+
+
+    public double getTotal(User user) {
+        double total = 0;
+        for (CartItem item : getItems(user)) {
+            total += item.getProduct().getPrice() * item.getQuantity();
+        }
+        return total;
+    }
+    public void saveCart(Cart cart) {
+        cartRepository.save(cart);
+    }
+    public void clearCart(User user) {
+        Cart cart = getCartByUser(user);
+
+        // Xóa toàn bộ cart_items trong DB
+        cart.getItems().clear();
+
+        // Lưu lại giỏ rỗng
+        cartRepository.save(cart);
+    }
+
 }
