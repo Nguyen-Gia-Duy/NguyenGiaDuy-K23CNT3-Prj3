@@ -4,33 +4,26 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import toyland.entity.Category;
 import toyland.entity.Product;
+
 import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    // Sản phẩm nổi bật
     List<Product> findByFeaturedTrue();
 
-    // Tìm kiếm theo tên
     List<Product> findByNameContainingIgnoreCase(String name);
 
-    // Lọc theo danh mục
     List<Product> findByCategoryId(Long categoryId);
 
-    // Top 4 sản phẩm cùng danh mục, bỏ qua sản phẩm hiện tại
     List<Product> findTop4ByCategoryAndIdNot(Category category, Long id);
 
-    // =============================
-    // Bổ sung Khuyến mãi & Hàng mới
-    // =============================
+    // ✅ Hàng mới
+    List<Product> findByNewProductTrue();
 
-    // Khuyến mãi
-    List<Product> findByDiscountGreaterThan(Double discount);
-
-    // Hàng mới
-    List<Product> findByIsNewTrue();
-
-    // Top 4 sản phẩm mới theo ngày tạo
+    // ✅ Top sản phẩm mới
     List<Product> findTop4ByOrderByCreatedDateDesc();
+
+    // ✅ Khuyến mãi
+    List<Product> findByDiscountGreaterThan(Double discount);
 }

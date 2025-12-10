@@ -1,168 +1,145 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.id != null ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}"></title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            background: #f5f7fb;
-            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            font-family: 'Inter', sans-serif;
         }
-
         .page-wrapper {
-            max-width: 720px;
-            margin: 40px auto;
-            padding: 0 15px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .card-custom {
-            background: white;
-            border-radius: 18px;
-            padding: 30px 35px;
-            box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+        .card {
+            width: 100%;
+            max-width: 850px;
+            border-radius: 22px;
+            box-shadow: 0 12px 30px rgba(0,0,0,.12);
+            border: none;
         }
-
-        .form-label {
-            font-weight: 600;
-            color: #003566;
-        }
-
         .form-control, .form-select {
             border-radius: 12px;
-            padding: 10px 14px;
-            border: 1px solid #d6d9df;
+            padding: 12px;
         }
-
-        .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
-            border-color: #0d6efd;
-        }
-
-        .preview-box {
-            margin-top: 10px;
-            padding: 10px;
-            display: inline-block;
-            border-radius: 12px;
-            border: 1px solid #dcdcdc;
-            background: #fafafa;
-        }
-
         .img-preview {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 16px;
+            border: 1px solid #ddd;
         }
-
-        .btn-save {
-            background: #0d6efd;
-            color: white;
-            font-weight: 600;
+        .btn {
             border-radius: 12px;
             padding: 10px 22px;
         }
-
-        .btn-save:hover {
-            background: #0b58d0;
+        .section-title {
+            font-weight: 700;
+            color: #4f46e5;
         }
-
-        .btn-back {
-            border-radius: 12px;
-            padding: 10px 22px;
-        }
-
     </style>
 </head>
 
 <body>
-
 <div class="page-wrapper">
+    <div class="card p-5">
 
-    <div class="card-custom">
+        <h3 class="section-title mb-4"
+            th:text="${product.id != null ? '✏️ Sửa sản phẩm' : '➕ Thêm sản phẩm'}"></h3>
 
-        <h3 class="text-primary fw-bold mb-4"
-            th:text="${product.id != null ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}">
-            Thêm sản phẩm
-        </h3>
-
-        <form th:action="@{/admin/products/save}" th:object="${product}" method="post">
+        <form th:action="@{/admin/products/save}"
+              th:object="${product}"
+              method="post">
 
             <input type="hidden" th:field="*{id}">
 
-            <!-- Tên sản phẩm -->
-            <div class="mb-3">
-                <label class="form-label">Tên sản phẩm</label>
-                <input type="text" class="form-control" th:field="*{name}" placeholder="Nhập tên sản phẩm" required>
-            </div>
+            <div class="row g-4">
 
-            <!-- Mô tả -->
-            <div class="mb-3">
-                <label class="form-label">Mô tả</label>
-                <textarea class="form-control" th:field="*{description}" rows="3"
-                          placeholder="Nhập mô tả chi tiết"></textarea>
-            </div>
-
-            <!-- Giá -->
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Giá (VNĐ)</label>
-                    <input type="number" class="form-control" th:field="*{price}" min="0" required>
+                <div class="col-md-8">
+                    <label class="fw-semibold">Tên sản phẩm</label>
+                    <input class="form-control" th:field="*{name}" required>
                 </div>
 
-                <!-- Số lượng -->
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Số lượng</label>
-                    <input type="number" class="form-control" th:field="*{quantity}" min="0" required>
+                <div class="col-md-4">
+                    <label class="fw-semibold">Số lượng</label>
+                    <input type="number" class="form-control" th:field="*{quantity}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="fw-semibold">Giá</label>
+                    <input type="number" class="form-control" th:field="*{price}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="fw-semibold">Danh mục</label>
+                    <select class="form-select" th:field="*{category}">
+                        <option value="">-- Chọn danh mục --</option>
+                        <option th:each="c:${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label class="fw-semibold">Mô tả</label>
+                    <textarea class="form-control" rows="3"
+                              th:field="*{description}"></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="fw-semibold">Chọn ảnh</label>
+                    <select class="form-select" th:field="*{imageUrl}"
+                            onchange="previewImage(this.value)">
+                        <option value="">-- Chọn ảnh --</option>
+
+                        <option th:each="img:${images}"
+                                th:value="'/images/'+${img}"
+                                th:text="${img}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 text-center" th:if="${product.imageUrl != null}">
+                    <img th:src="@{${product.imageUrl}}"
+                         class="img-preview mt-3">
+                </div>
+
+                <!-- CHECKBOX -->
+                <div class="col-md-6">
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" th:field="*{featured}">
+                        <label class="form-check-label fw-semibold">Sản phẩm nổi bật</label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" th:field="*{newProduct}">
+                        <label class="form-check-label fw-semibold">Hàng mới</label>
+                    </div>
                 </div>
             </div>
 
-            <!-- Ảnh sản phẩm -->
-            <div class="mb-3">
-                <label class="form-label">URL hình ảnh</label>
-                <input type="text" class="form-control" th:field="*{imageUrl}" placeholder="/images/ten-anh.jpg">
-            </div>
-
-            <!-- Preview ảnh -->
-            <div class="mb-3" th:if="${product.imageUrl}">
-                <label class="form-label">Xem trước ảnh</label><br>
-                <div class="preview-box">
-                    <img class="img-preview" th:src="@{${product.imageUrl}}" alt="Preview">
-                </div>
-            </div>
-
-            <!-- Danh mục -->
-            <div class="mb-3">
-                <label class="form-label">Danh mục</label>
-                <select class="form-select" th:field="*{category}">
-                    <option value="">-- Chọn danh mục --</option>
-                    <option th:each="c : ${categories}"
-                            th:value="${c.id}"
-                            th:selected="${product.category != null and product.category.id == c.id}"
-                            th:text="${c.name}">
-                    </option>
-                </select>
-            </div>
-
-            <!-- Nút -->
-            <div class="mt-4 d-flex gap-3">
-                <button type="submit" class="btn btn-save">
-                    Lưu sản phẩm
-                </button>
-
-                <a th:href="@{/admin/products}" class="btn btn-secondary btn-back">
-                    Quay lại
+            <div class="mt-5 d-flex justify-content-between">
+                <a th:href="@{/admin/products}" class="btn btn-outline-secondary">
+                    ← Quay lại
                 </a>
+
+                <button class="btn btn-primary">
+                    💾 Lưu sản phẩm
+                </button>
             </div>
 
         </form>
-
     </div>
-
 </div>
-
 </body>
 </html>

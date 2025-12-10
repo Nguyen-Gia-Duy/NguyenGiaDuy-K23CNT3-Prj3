@@ -1,32 +1,37 @@
 package toyland.entity;
 
+import jakarta.persistence.*;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.*;
-import lombok.ToString;
 
 @Entity
 @Table(name = "products")
 public class Product {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String description;
-    private Double price;           // Giá gốc
+    private Double price;
     private Integer quantity;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    private boolean featured;       // Sản phẩm nổi bật
-    private boolean isNew;          // Hàng mới về
+    @Column(nullable = false)
+    private boolean featured = false;
 
-    // Khuyến mãi
-    private Double discount;        // % giảm giá
-    private Double salePrice;       // Giá sau giảm
+    // ✅ MAP ĐÚNG CỘT DB
+    @Column(name = "is_new", nullable = false)
+    private boolean newProduct = false;
+
+    private Double discount;
+    private Double salePrice;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -37,45 +42,106 @@ public class Product {
     @ToString.Exclude
     private List<CartItem> cartItems = new ArrayList<>();
 
-    private LocalDateTime createdDate = LocalDateTime.now(); // ngày tạo sản phẩm
+    @Column(name = "created_date")
+    private LocalDateTime createdDate = LocalDateTime.now();
 
-    // --- Getter & Setter ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getName() {
+        return name;
+    }
 
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public boolean isFeatured() { return featured; }
-    public void setFeatured(boolean featured) { this.featured = featured; }
+    public Double getPrice() {
+        return price;
+    }
 
-    public boolean isNew() { return isNew; }
-    public void setNew(boolean isNew) { this.isNew = isNew; }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-    public Double getDiscount() { return discount; }
-    public void setDiscount(Double discount) { this.discount = discount; }
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-    public Double getSalePrice() { return salePrice; }
-    public void setSalePrice(Double salePrice) { this.salePrice = salePrice; }
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-    public Category getCategory() { return category; }
-    public void setCategory(Category category) { this.category = category; }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-    public List<CartItem> getCartItems() { return cartItems; }
-    public void setCartItems(List<CartItem> cartItems) { this.cartItems = cartItems; }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-    public LocalDateTime getCreatedDate() { return createdDate; }
-    public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    // ===== Getter & Setter =====
+    public boolean isNewProduct() { return newProduct; }
+    public void setNewProduct(boolean newProduct) { this.newProduct = newProduct; }
 }

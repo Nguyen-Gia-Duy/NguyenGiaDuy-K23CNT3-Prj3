@@ -2,28 +2,150 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý đơn hàng</title>
+    <title>Quản lý đơn hàng | Admin</title>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+
     <style>
-        body { background: #f5f7fb; font-family: "Inter", sans-serif; margin:0; }
-        .page-container { width:100%; padding:25px 40px; }
-        .card-custom { border-radius:18px; padding:25px; background:#fff; box-shadow:0 6px 20px rgba(0,0,0,0.08); border:none; width:100%; }
-        .btn-add { background:#0d6efd; border:none; padding:10px 20px; border-radius:12px; color:#fff; font-weight:600; margin-bottom:15px; cursor:pointer; }
-        .table-wrapper { border-radius:16px; overflow:hidden; border:2px solid #000; width:100%; }
-        .table { width:100%; border-collapse:collapse; table-layout:fixed; }
-        .table thead th { background:#ebeff7; text-transform:uppercase; color:#003566; font-size:14px; font-weight:700; border-bottom:2px solid #003566; text-align:center; padding:12px 8px; }
-        .table tbody td { padding:10px 8px; text-align:center; word-wrap:break-word; }
-        .action-btn { padding:6px 10px; border-radius:10px; border:1px solid #cfd3da; background:white; cursor:pointer; transition: all 0.2s; }
-        .action-btn:hover { background:#eef4ff; transform:translateY(-2px); }
+        body {
+            background: #f4f6fb;
+            font-family: Inter, system-ui, sans-serif;
+        }
+
+        /* FULL WIDTH */
+        .page-container {
+            width: 100%;
+            padding: 32px 48px;
+        }
+
+        .card {
+            width: 100%;
+            border-radius: 18px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+            padding: 28px;
+            background: #fff;
+        }
+
+        /* HEADER */
+        h2 {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .sub-title {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* BUTTON */
+        .btn-back {
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            background: #eef2ff;
+            color: #4338ca;
+            text-decoration: none;
+            transition: all .2s ease;
+        }
+
+        .btn-back:hover {
+            background: #c7d2fe;
+            color: #312e81;
+        }
+
+        .btn-detail {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            background: #6366f1;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-detail:hover {
+            background: #4f46e5;
+        }
+
+        /* TABLE */
+        .table {
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #eef2ff;
+        }
+
+        thead th {
+            font-weight: 700;
+            text-align: center;
+            padding: 14px;
+        }
+
+        tbody td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 14px;
+            font-size: 15px;
+        }
+
+        tbody tr:hover {
+            background: #f1f5f9;
+            transition: background .15s ease;
+        }
+
+        /* STATUS */
+        .status {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13px;
+            display: inline-block;
+            min-width: 110px;
+        }
+
+        .PENDING {
+            background: #fff7ed;
+            color: #92400e;
+        }
+
+        .COMPLETED {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        hr {
+            border-top: 1px solid #e5e7eb;
+            margin: 24px 0;
+        }
     </style>
 </head>
+
 <body>
+
 <div class="page-container">
-    <div class="card-custom">
-        <h2>Danh sách đơn hàng</h2>
-        <a href="#" class="btn-add">Thêm đơn hàng</a>
-        <div class="table-wrapper">
-            <table class="table">
+
+    <div class="card">
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h2>📦 Quản lý đơn hàng</h2>
+
+            </div>
+
+            <a th:href="@{/admin/index}" class="btn-back">
+                ⬅ Dashboard
+            </a>
+        </div>
+
+        <hr>
+
+        <!-- TABLE -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -34,24 +156,48 @@
                     <th>Hành động</th>
                 </tr>
                 </thead>
+
                 <tbody>
                 <tr th:each="order : ${orders}">
-                    <td th:text="${order.id}"></td>
+                    <td class="fw-bold">
+                        #<span th:text="${order.id}"></span>
+                    </td>
+
                     <td th:text="${order.user.username}"></td>
+
                     <td th:text="${#temporals.format(order.orderDate,'dd/MM/yyyy HH:mm')}"></td>
-                    <td th:text="${order.totalPrice} + ' ₫'"></td>
-                    <td th:text="${order.status}"></td>
+
+                    <td class="fw-bold text-primary"
+                        th:text="${#numbers.formatDecimal(order.totalPrice,0,'COMMA',0,'POINT')} + ' ₫'">
+                    </td>
+
                     <td>
-                        <a th:href="@{'/admin/order/detail?id=' + ${order.id}}" class="action-btn">Xem chi tiết</a>
+                        <span class="status"
+                              th:classappend="${order.status}"
+                              th:text="${order.status}">
+                        </span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/admin/orders/detail(id=${order.id})}"
+                           class="btn-detail">
+                            Chi tiết
+                        </a>
                     </td>
                 </tr>
-                <tr th:if="${orders.size() == 0}">
-                    <td colspan="6">Chưa có đơn hàng nào.</td>
+
+                <tr th:if="${orders == null || orders.isEmpty()}">
+                    <td colspan="6" class="text-muted text-center py-4">
+                        Chưa có đơn hàng nào
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
     </div>
+
 </div>
+
 </body>
 </html>
