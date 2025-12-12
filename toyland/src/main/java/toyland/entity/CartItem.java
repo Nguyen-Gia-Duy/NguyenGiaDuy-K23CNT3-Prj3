@@ -3,7 +3,7 @@ package toyland.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cart_items")
+@Table(name = "ngdcart_items")
 public class CartItem {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

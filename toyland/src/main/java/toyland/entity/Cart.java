@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(
-        name = "carts",
+        name = "ngdcarts",
         uniqueConstraints = @UniqueConstraint(columnNames = "user_id")
 )
 public class Cart {

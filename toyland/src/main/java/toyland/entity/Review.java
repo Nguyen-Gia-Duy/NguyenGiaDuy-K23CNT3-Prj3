@@ -1,15 +1,16 @@
 package toyland.entity;
+
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
-import java.util.List;
-import jakarta.persistence.GenerationType;
+
 @Data
 @Entity
-@Table(name = "reviews")
+@Table(name = "ngdreviews")
 public class Review {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -21,6 +22,8 @@ public class Review {
     private Product product;
 
     private String content;
-    private Integer rating; // 1-5
+
+    private Integer rating;
+
     private LocalDateTime createdAt;
 }

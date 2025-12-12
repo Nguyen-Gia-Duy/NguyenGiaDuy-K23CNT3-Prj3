@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.util.List;
 @Data
 @Entity
-@Table(name = "categories")
+@Table(name = "ngdcategories")
 public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
